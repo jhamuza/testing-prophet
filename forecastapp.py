@@ -122,7 +122,7 @@ if page == "Application":
 
     try:
         if sample:
-            st.markdown("""[download_link](https://gist.github.com/giandata/e0b5c2d2e71d4fd4388295eb5b71aeeb)""")    
+            st.markdown("""[download_link](https://github.com/jhamuza/testing-prophet/blob/main/Terengganu%5B1%5D.csv)""")    
             
     except:
 

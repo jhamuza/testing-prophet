@@ -85,62 +85,6 @@ future['cap']=cap
 future['floor']=floor
                 """
 
-code3 = """
-try:     
-    df_cv = cross_validation(m, initial=initial,
-        period=period, 
-        horizon = horizon,
-        parallel="processes")
-except:
-    df_cv = cross_validation(m, initial=initial,
-        period=period, 
-        horizon = horizon,
-        parallel="threads")
-except:
-    st.write("Invalid configuration")    
-    df_p = performance_metrics(df_cv)
-    st.dataframe(df_p)
-
-metrics = ['mse','rmse','mae','mape','mdape','coverage']
-
-selected_metric = st.radio(label='Plot metric',options=metrics)
-st.write(selected_metric)
-fig4 = plot_cross_validation_metric(df_cv, metric=selected_metric)
-st.write(fig4)
-"""
-code4 = """
-param_grid = {  
-            'changepoint_prior_scale': [0.01, 0.1, 0.5],
-            'seasonality_prior_scale': [0.1, 1.0, 10.0],
-             }
-
-# Generate all combinations of parameters
-all_params = [dict(zip(param_grid.keys(), v)) for v in itertools.product(*param_grid.values())]
-rmses = []  # Store the RMSEs for each params here
-
-# Use cross validation to evaluate all parameters
-for params in all_params:
-m = Prophet(**params).fit(df)  # Fit model with given params
-df_cv = cross_validation(m, initial=initial,
-                                period=period,
-                                horizon=horizon,
-                                parallel="processes")
-df_p = performance_metrics(df_cv, rolling_window=1)
-rmses.append(df_p['rmse'].values[0])
-
-# Find the best parameters
-tuning_results = pd.DataFrame(all_params)
-tuning_results['rmse'] = rmses
-st.write(tuning_results)
-
-best_params = all_params[np.argmin(rmses)]
-st.write('The best parameter combination is:')
-st.write(f"Changepoint prior scale: ** {best_params[0]} ** ")
-st.write(f"Seasonality prior scale: ** {best_params[1]} ** ")
-                        """
-
-code_options = ["Dataframe information","Model fitting","Cross validation","Hyperparam tuning"]
-
 if page == "Application":
     
     with st.sidebar:
@@ -178,7 +122,7 @@ if page == "Application":
 
     try:
         if sample:
-            st.markdown("""[download_link](https://github.com/jhamuza/testing-prophet/blob/main/Terengganu%5B1%5D.csv)""")    
+            st.markdown("""[download_link](https://gist.github.com/giandata/e0b5c2d2e71d4fd4388295eb5b71aeeb)""")    
             
     except:
 
@@ -230,9 +174,9 @@ if page == "Application":
             periods_input = st.number_input('Select how many future periods (days) to forecast.',
             min_value = 1, max_value = 366,value=90)
 
-        #with st.beta_expander("Seasonality"):
-        #    st.markdown("""The default seasonality used is additive, but the best choice depends on the specific case, therefore specific domain knowledge is required. For more informations visit the [documentation](https://facebook.github.io/prophet/docs/multiplicative_seasonality.html)""")
-        #    seasonality = st.radio(label='Seasonality',options=['additive','multiplicative'])
+        with st.beta_expander("Seasonality"):
+            st.markdown("""The default seasonality used is additive, but the best choice depends on the specific case, therefore specific domain knowledge is required. For more informations visit the [documentation](https://facebook.github.io/prophet/docs/multiplicative_seasonality.html)""")
+            seasonality = st.radio(label='Seasonality',options=['additive','multiplicative'])
 
         with st.beta_expander("Trend components"):
             st.write("Add or remove components:")
@@ -241,97 +185,6 @@ if page == "Application":
             monthly = st.checkbox("Monthly")
             yearly = st.checkbox("Yearly")
 
-        #with st.beta_expander("Growth model"):
-        #    st.write('Prophet uses by default a linear growth model.')
-        #    st.markdown("""For more information check the [documentation](https://facebook.github.io/prophet/docs/saturating_forecasts.html#forecasting-growth)""")
-
-        #    growth = st.radio(label='Growth model',options=['linear',"logistic"]) 
-
-        #    if growth == 'linear':
-        #        growth_settings= {
-        #                    'cap':1,
-        #                    'floor':0
-        #                }
-        #        cap=1
-        #        floor=1
-        #        df['cap']=1
-        #        df['floor']=0
-
-        #    if growth == 'logistic':
-        #        st.info('Configure saturation')
-
-        #        cap = st.slider('Cap',min_value=0.0,max_value=1.0,step=0.05)
-        #        floor = st.slider('Floor',min_value=0.0,max_value=1.0,step=0.05)
-        #        if floor > cap:
-        #            st.error('Invalid settings. Cap must be higher then floor.')
-        #            growth_settings={}
-
-        #        if floor == cap:
-        #            st.warning('Cap must be higher than floor')
-        #        else:
-        #            growth_settings = {
-        #                'cap':cap,
-        #                'floor':floor
-        #                }
-        #            df['cap']=cap
-        #            df['floor']=floor
-            
-            
-        #with st.beta_expander('Holidays'):
-            
-        #    countries = ['Country name','Italy','Spain','United States','France','Germany','Ukraine']
-            
-        #    with st.beta_container():
-        #        years=[2021]
-        #        selected_country = st.selectbox(label="Select country",options=countries)
-
-        #        if selected_country == 'Italy':
-        #            for date, name in sorted(holidays.IT(years=years).items()):
-        #                st.write(date,name) 
-                            
-        #        if selected_country == 'Spain':
-                    
-        #            for date, name in sorted(holidays.ES(years=years).items()):
-        #                    st.write(date,name)                      
-
-        #        if selected_country == 'United States':
-                    
-        #            for date, name in sorted(holidays.US(years=years).items()):
-        #                    st.write(date,name)
-                            
-        #        if selected_country == 'France':
-                    
-        #            for date, name in sorted(holidays.FR(years=years).items()):
-        #                    st.write(date,name)
-                            
-        #        if selected_country == 'Germany':
-                    
-        #            for date, name in sorted(holidays.DE(years=years).items()):
-                            st.write(date,name)
-                            
-        #        if selected_country == 'Ukraine':
-                    
-        #            for date, name in sorted(holidays.UKR(years=years).items()):
-        #                    st.write(date,name)
-
-        #        else:
-        #            holidays = False
-                            
-        #        holidays = st.checkbox('Add country holidays to the model')
-
-        #with st.beta_expander('Hyperparameters'):
-        #    st.write('In this section it is possible to tune the scaling coefficients.')
-            
-        #    seasonality_scale_values= [0.1, 1.0,5.0,10.0]    
-        #    changepoint_scale_values= [0.01, 0.1, 0.5,1.0]
-
-        #    st.write("The changepoint prior scale determines the flexibility of the trend, and in particular how much the trend changes at the trend changepoints.")
-        #    changepoint_scale= st.select_slider(label= 'Changepoint prior scale',options=changepoint_scale_values)
-            
-        #    st.write("The seasonality change point controls the flexibility of the seasonality.")
-        #    seasonality_scale= st.select_slider(label= 'Seasonality prior scale',options=seasonality_scale_values)    
-
-        #    st.markdown("""For more information read the [documentation](https://facebook.github.io/prophet/docs/diagnostics.html#parallelizing-cross-validation)""")
 
     with st.beta_container():
         st.subheader("3. Forecast 🔮")
@@ -349,8 +202,8 @@ if page == "Application":
                                 growth=growth,
                                 changepoint_prior_scale=changepoint_scale,
                                 seasonality_prior_scale= seasonality_scale)
-                    #if holidays:
-                    #    m.add_country_holidays(country_name=selected_country)
+                    if holidays:
+                        m.add_country_holidays(country_name=selected_country)
                         
                     if monthly:
                         m.add_seasonality(name='monthly', period=30.4375, fourier_order=5)
@@ -393,129 +246,7 @@ if page == "Application":
                         fig3 = m.plot_components(forecast)
                         st.write(fig3)
                 except: 
-                    st.warning("Requires forecast generation..") 
-
-        st.subheader('4. Model validation 🧪')
-        st.write("In this section it is possible to do cross-validation of the model.")
-        with st.beta_expander("Explanation"):
-            st.markdown("""The Prophet library makes it possible to divide our historical data into training data and testing data for cross validation. The main concepts for cross validation with Prophet are:""")
-            st.write("Training data (initial): The amount of data set aside for training. The parameter is in the API called initial.")
-            st.write("Horizon: The data set aside for validation.")
-            st.write("Cutoff (period): a forecast is made for every observed point between cutoff and cutoff + horizon.""")
-
-            
-        #with st.beta_expander("Cross validation"):    
-        #    initial = st.number_input(value= 365,label="initial",min_value=30,max_value=1096)
-        #    initial = str(initial) + " days"
-
-        #    period = st.number_input(value= 90,label="period",min_value=1,max_value=365)
-        #    period = str(period) + " days"
-
-        #    horizon = st.number_input(value= 90, label="horizon",min_value=30,max_value=366)
-        #    horizon = str(horizon) + " days"
-
-        #    st.write(f"Here we do cross-validation to assess prediction performance on a horizon of **{horizon}** days, starting with **{initial}** days of training data in the first cutoff and then making predictions every **{period}**.")
-        #    st.markdown("""For more information read the [documentation](https://facebook.github.io/prophet/docs/diagnostics.html#parallelizing-cross-validation)""")
-        
-            
-        #with st.beta_expander("Metrics"):
-            
-        #    if input:
-        #        if output == 1:
-        #            metrics = 0
-        #            if st.checkbox('Calculate metrics'):
-        #                with st.spinner("Cross validating.."):
-        #                    try:
-        #                        df_cv = cross_validation(m, initial=initial,
-        #                                                period=period, 
-        #                                                horizon = horizon,
-        #                                                parallel="processes")                                        
-                            
-                            
-                            
-        #                        df_p= performance_metrics(df_cv)
-        #                        st.write(df_p)
-        #                        metrics = 1
-        #                    except:
-        #                        st.write("Invalid configuration. Try other parameters.")
-        #                        metrics = 0
-
-
-        #                    st.markdown('**Metrics definition**')
-        #                    st.write("Mse: mean absolute error")
-        #                    st.write("Mae: Mean average error")
-        #                    st.write("Mape: Mean average percentage error")
-        #                    st.write("Mse: mean absolute error")
-        #                    st.write("Mdape: Median average percentage error")
-
-        #                    if metrics == 1:
-
-        #                        metrics = ['Choose a metric','mse','rmse','mae','mape','mdape','coverage']
-        #                        selected_metric = st.selectbox("Select metric to plot",options=metrics)
-        #                        if selected_metric != metrics[0]:
-        #                            fig4 = plot_cross_validation_metric(df_cv, metric=selected_metric)
-        #                            st.write(fig4)
-                        
-        #    else:
-        #        st.write("Create a forecast to see metrics")
-
-        #st.subheader('5. Hyperparameter Tuning 🧲')
-        #st.write("In this section it is possible to find the best combination of hyperparamenters.")
-        #st.markdown("""For more informations visit the [documentation](https://facebook.github.io/prophet/docs/diagnostics.html#hyperparameter-tuning)""")
-
-        #param_grid = {  
-        #                    'changepoint_prior_scale': [0.01, 0.1, 0.5, 1.0],
-        #                    'seasonality_prior_scale': [0.1, 1.0, 5.0, 10.0],
-                        }
-
-        # Generate all combinations of parameters
-        #all_params = [dict(zip(param_grid.keys(), v)) for v in itertools.product(*param_grid.values())]
-        #rmses = []  # Store the RMSEs for each params here
-
-        #if input:
-        #    if output == 1:
-
-        #        if st.button("Optimize hyperparameters"):
-                    
-        #            with st.spinner("Finding best combination. Please wait.."):
-
-                        
-        #                try:
-                        # Use cross validation to evaluate all parameters
-        #                    for params in all_params:
-        #                        m = Prophet(**params).fit(df)  # Fit model with given params
-        #                        df_cv = cross_validation(m, initial=initial,
-        #                                                        period=period,
-        #                                                        horizon=horizon,
-        #                                                        parallel="processes")
-        #                        df_p = performance_metrics(df_cv, rolling_window=1)
-        #                        rmses.append(df_p['rmse'].values[0])
-        #                except:
-        #                    for params in all_params:
-        #                        m = Prophet(**params).fit(df)  # Fit model with given params
-        #                        df_cv = cross_validation(m, initial=initial,
-        #                                                        period=period,
-        #                                                        horizon=horizon,
-        #                                                        parallel="threads")
-        #                        df_p = performance_metrics(df_cv, rolling_window=1)
-        #                        rmses.append(df_p['rmse'].values[0])
-
-                    # Find the best parameters
-        #            tuning_results = pd.DataFrame(all_params)
-        #            tuning_results['rmse'] = rmses
-        #            st.write(tuning_results)
-                            
-        #            best_params = all_params[np.argmin(rmses)]
-                    
-        #            st.write('The best parameter combination is:')
-        #            st.write(best_params)
-                    #st.write(f"Changepoint prior scale:  {best_params[0]} ")
-                    #st.write(f"Seasonality prior scale: {best_params[1]}  ")
-        #            st.write(" You may repeat the process using these parameters in the configuration section 2")
-                    
-
-        #    else:
-        #        st.write("Create a model to optimize")    
+                    st.warning("Requires forecast generation..")  
 
         st.subheader('6. Export results ✨')
         
@@ -523,7 +254,7 @@ if page == "Application":
         
         if input:
             if output == 1:
-                col1, col2, col3, col4 = st.beta_columns(4)
+                col1, col4 = st.beta_columns(2) #test
 
                 with col1:
                     
@@ -537,25 +268,7 @@ if page == "Application":
                             b64 = base64.b64encode(export_forecast.encode()).decode()
                             href = f'<a href="data:file/csv;base64,{b64}">Download CSV File</a> (click derecho > guardar como **forecast.csv**)'
                             st.markdown(href, unsafe_allow_html=True)
-            
-                with col2:
-                    
-                    if st.button("Export model metrics (.csv)"):
-                        try:
-                            df_p = df_p.to_csv(decimal=',')
-                            b64 = base64.b64encode(df_p.encode()).decode()
-                            href = f'<a href="data:file/csv;base64,{b64}">Download CSV File</a> (click derecho > guardar como **metrics.csv**)'
-                            st.markdown(href, unsafe_allow_html=True)
-                        except:
-                            st.write("No metrics to export")
-
-                with col3:
-                    if st.button('Save model configuration (.json) in memory'):
-                        with open('serialized_model.json', 'w') as fout:
-                            json.dump(model_to_json(m), fout)
                             
-                    
-
                 with col4:
                     if st.button('Clear cache memory please'):
                         caching.clear_cache()

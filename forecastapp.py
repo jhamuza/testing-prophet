@@ -110,7 +110,7 @@ if page == "Application":
 
     try:
         if sample:
-            st.markdown("""[download_link](https://github.com/jhamuza/testing-prophet/blob/main/Terengganu%5B1%5D.csv)""")    
+            st.markdown("""[download_link](https://github.com/jhamuza/testing-prophet/raw/main/Terengganu%5B1%5D.csv)""")    
             
     except:
 

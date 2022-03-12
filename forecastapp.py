@@ -323,5 +323,5 @@ if page == "About":
     st.markdown("""**[Source code](https://github.com/jhamuza/testing-prophet)**""")
 
     st.write("Created on 27/02/2021")
-    st.write("Last updated: **29/04/2021**")
+    st.write("Last updated: 29/04/2021")
     st.write("Amended on: **12/03/2022**")

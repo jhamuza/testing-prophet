@@ -6,12 +6,8 @@ import numpy as np
 import pystan
 from fbprophet import Prophet
 from fbprophet.plot import add_changepoints_to_plot
-from fbprophet.diagnostics import cross_validation
-from fbprophet.diagnostics import performance_metrics
-from fbprophet.plot import plot_cross_validation_metric
 import json
 from fbprophet.serialize import model_to_json, model_from_json
-import holidays
 
 import altair as alt
 import plotly as plt
@@ -23,7 +19,7 @@ import itertools
 from datetime import datetime
 import json
 
-st.set_page_config(page_title ="Forecast App",
+st.set_page_config(page_title ="FBProphet Forecasting App",
                     initial_sidebar_state="collapsed",
                     page_icon="🔮")
 
@@ -110,7 +106,7 @@ if page == "Application":
 
     try:
         if sample:
-            st.markdown("""[download_link](https://github.com/jhamuza/testing-prophet/raw/main/Terengganu%5B1%5D.csv)""")    
+            st.markdown("""[download_link](https://gist.github.com/jhamuza/b8b285b992afed4f479e01fcb4c1e88a)""")    
             
     except:
 
@@ -322,6 +318,10 @@ if page == "About":
     st.write("Author:")
     st.markdown(""" **[Giancarlo Di Donato](https://www.linkedin.com/in/giancarlodidonato/)**""")
     st.markdown("""**[Source code](https://github.com/giandata/forecast-app)**""")
+    st.write("Deployed for Capstone Project by:")
+    st.markdown(""" **[Hamzah](https://github.com/jhamuza)**""")
+    st.markdown("""**[Source code](https://github.com/jhamuza/testing-prophet)**""")
 
     st.write("Created on 27/02/2021")
     st.write("Last updated: **29/04/2021**")
+    st.write("Amended on: **12/03/2022**")

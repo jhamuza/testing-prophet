@@ -172,7 +172,41 @@ if page == "Application":
             weekly= st.checkbox("Weekly")
             monthly = st.checkbox("Monthly")
             yearly = st.checkbox("Yearly")
+        
+        with st.beta_expander("Growth model"):
+            st.write('Prophet uses by default a linear growth model.')
+            st.markdown("""For more information check the [documentation](https://facebook.github.io/prophet/docs/saturating_forecasts.html#forecasting-growth)""")
 
+            growth = st.radio(label='Growth model',options=['linear',"logistic"]) 
+
+            if growth == 'linear':
+                growth_settings= {
+                            'cap':1,
+                            'floor':0
+                        }
+                cap=1
+                floor=1
+                df['cap']=1
+                df['floor']=0
+
+            if growth == 'logistic':
+                st.info('Configure saturation')
+
+                cap = st.slider('Cap',min_value=0.0,max_value=1.0,step=0.05)
+                floor = st.slider('Floor',min_value=0.0,max_value=1.0,step=0.05)
+                if floor > cap:
+                    st.error('Invalid settings. Cap must be higher then floor.')
+                    growth_settings={}
+
+                if floor == cap:
+                    st.warning('Cap must be higher than floor')
+                else:
+                    growth_settings = {
+                        'cap':cap,
+                        'floor':floor
+                        }
+                    df['cap']=cap
+                    df['floor']=floor
 
     with st.beta_container():
         st.subheader("3. Forecast 🔮")

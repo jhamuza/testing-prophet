@@ -90,18 +90,6 @@ if page == "Application":
     with st.sidebar:
         if st.button(label='Clear cache'):
             caching.clear_cache()
-            
-
-        with st.beta_expander("Code snippets"):
-            snippet = st.radio('Code snippets',options=code_options)    
-            if snippet == code_options[0]:
-                st.code(code1)
-            if snippet == code_options[1]:
-                st.code(code2)
-            if snippet == code_options[2]:
-                st.code(code3)
-            if snippet == code_options[3]:
-                st.code(code4)
 
     st.title('Forecast application 🧙🏻')
     st.write('This app enables you to generate time series forecast withouth any dependencies.')
